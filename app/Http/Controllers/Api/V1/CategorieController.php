@@ -6,6 +6,7 @@ use App\Models\Categorie;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Http\Resources\CategorieResource;
+use App\Http\Resources\ProductByCategorieResource;
 
 class CategorieController extends Controller
 {
@@ -15,18 +16,24 @@ class CategorieController extends Controller
     public function index()
     {
         $categories = Categorie::all();
-    
+        
         // Vérifier si la collection est vide
         if ($categories->isEmpty()) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Aucune catégorie disponible.',
+                'data' => [], // Dans ce cas, on retourne un tableau vide pour 'data'
             ], 404); // Retourne un message avec un code 404 si aucune catégorie n'est trouvée
         }
-    
-        // Si des catégories existent, retourne la collection de catégories
-        return CategorieResource::collection($categories);
+        
+        // Si des catégories existent, retourne la collection de catégories dans 'data'
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Données des catégories récupérées avec succès.',
+            'data' => CategorieResource::collection($categories), // Les catégories sont transformées par la resource
+        ], 200); // Code 200 pour une récupération réussie des données
     }
+    
     
     /**
      * Store a newly created resource in storage.
@@ -46,7 +53,7 @@ class CategorieController extends Controller
 
         if ($existingCategorie) {
             return response()->json([
-                'status' => 'echec.',
+                'status' => 'conflit.',
                 'message' => 'Une catégorie avec ce nom ou cette description existe déjà.',
                 'data' => $existingCategorie,
             ], 409); // Code 409 pour indiquer un conflit
@@ -55,8 +62,11 @@ class CategorieController extends Controller
         // Création de la société si aucune duplication n'est trouvée
         $categorie = Categorie::create($validated);
 
-        // Retourne la société nouvellement créée
-        return new CategorieResource($categorie);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'La catégorie a été ajoutée avec succès',
+            'data'=> new CategorieResource($categorie),
+        ], 201); 
     }
 
     /**
@@ -72,12 +82,17 @@ class CategorieController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Catégorie non trouvée.',
+                'data' => []
             ], 404); // 404 pour catégorie non trouvée
         }
     
         // Si la catégorie existe, renvoie les données avec un message de succès
 
-        return CategorieResource::make($categorie);
+        return response()->json([
+            'status' => 'succes',
+            'message' => 'Données de la catégorie récupérée avec succès.' ,
+            'data'=> new CategorieResource($categorie),
+        ]);
     }
     
     
@@ -114,5 +129,35 @@ class CategorieController extends Controller
             'message' => 'Catégorie supprimée avec succès.',
         ], 200);
     }
+
+    public function getProductsByCategory($id)
+{
+    // Récupère la catégorie par son ID
+    $categorie = Categorie::with('products')->find($id);
+
+    // Vérifie si la catégorie existe
+    if (!$categorie) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Catégorie non trouvée.',
+        ], 404);
+    }
+
+    // Vérifie si la catégorie a des produits associés
+    if ($categorie->products->isEmpty()) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Aucun produit trouvé pour cette catégorie.',
+        ], 404);
+    }
+
+    // Retourne les produits liés à la catégorie
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Produits trouvés pour la catégorie.',
+        'data' => new ProductByCategorieResource($categorie)
+    ], 200);
+}
+
     
 }

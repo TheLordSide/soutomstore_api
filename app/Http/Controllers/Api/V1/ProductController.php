@@ -13,20 +13,26 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $product = Product::all();
+{
+    $product = Product::all();
     
-        // Vérifier si la collection est vide
-        if ($product->isEmpty()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Aucun produit disponible.',
-            ], 404); // Retourne un message avec un code 404 si aucun produit n'est trouvé
-        }
-    
-        // Si des produits existent, retourne la collection de produits
-        return ProductResource::collection($product);
+    // Vérifier si la collection est vide
+    if ($product->isEmpty()) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Aucun produit disponible.',
+            'data' => []
+        ], 404); // Retourne un message avec un code 404 si aucun produit n'est trouvé
     }
+
+    // Si des produits existent, retourne la collection de produits
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Données des produits récupérées avec succès.',
+        'data' => ProductResource::collection($product) // Utilisez collection ici pour transformer la collection
+    ], 200);
+}
+
 
 
     /**
@@ -63,8 +69,8 @@ class ProductController extends Controller
 
     // Retourne le produit nouvellement créé
     return response()->json([
-        'status' => 'success',
-        'message' => 'Produit créé avec succès.',
+        'status' => 'succes',
+        'message' => 'Le produit a été ajoutée avec succès',
         'data' => new ProductResource($product),
     ], 201); // Code 201 pour indiquer une ressource créée
 }
@@ -82,12 +88,16 @@ class ProductController extends Controller
            return response()->json([
                'status' => 'error',
                'message' => 'Produit non trouvé.',
+               'data' => []
            ], 404); // 404 pour catégorie non trouvée
        }
    
        // Si la catégorie existe, renvoie les données avec un message de succès
-
-       return ProductResource::make($product);
+       return response()->json([
+        'status' => 'succes',
+        'message' => 'Données du produit récupérée avec succès.' ,
+        'data'=> new ProductResource($product),
+       ]);
     }
 
     /**

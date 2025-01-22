@@ -12,4 +12,5 @@ Route::get('/user', function (Request $request) {
 Route::prefix('v1')->group(function(){
     Route::apiResource('/categories', CategorieController::class);
     Route::apiResource('/produits', ProductController::class);
+    Route::get('/categories/{id}/produits', [CategorieController::class, 'getProductsByCategory']);
 });

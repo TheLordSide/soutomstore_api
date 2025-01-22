@@ -2,30 +2,32 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\OrderItem;
+use App\Http\Resources\OrderResource;
 
-class OrderItemsController extends Controller
+class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $order_item = OrderItem::all();
+        $order = Order::all();
     
         // Vérifier si la collection est vide
-        if ($order_item->isEmpty()) {
+        if ($order->isEmpty()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Aucun acticle dans la commande.',
+                'message' => 'Aucune commande effectuee.',
             ], 404); // Retourne un message avec un code 404 si aucune commande n'est trouvée
         }
     
         // Si des commandes existent, retourne la collection de commandes
-        return OrderItem::collection($order_item);
+        return Order::collection($order);
     }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -37,9 +39,22 @@ class OrderItemsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+            // Récupère la commande par ID
+            $product = Order::find($id);
+    
+            // Vérifie si la commande existe
+            if (!$product) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Commande non trouvé.',
+                ], 404); // 404 pour commande non trouvée
+            }
+        
+            // Si la commande existe, renvoie les données avec un message de succès
+     
+            return OrderResource::make($product);
     }
 
     /**
