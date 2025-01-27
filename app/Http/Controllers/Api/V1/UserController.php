@@ -2,30 +2,34 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\OrderItem;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class OrderItemsController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $order_item = OrderItem::all();
+        $user = User::all();
 
-        // Vérifier si la collection est vide
-        if ($order_item->isEmpty()) {
+        if ($user->isEmpty()) {
             return response()->json([
                 'status'  => 'error',
-                'message' => 'Aucun acticle dans la commande.',
-                'data' => []
-            ], 404); // Retourne un message avec un code 404 si aucune commande n'est trouvée
+                'message' => 'Aucun utilisateur disponible.',
+                'data'    => [],
+            ], 404);
         }
 
-        // Si des commandes existent, retourne la collection de commandes
-        return OrderItem::collection($order_item);
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Données des utilisateurs récupérées avec succès.',
+            'data'    => UserResource::collection($user),
+        ], 200);
     }
+
     /**
      * Store a newly created resource in storage.
      */

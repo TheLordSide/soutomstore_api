@@ -14,7 +14,6 @@ class ProductResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-
             'id'          => $this->id,
             'name'        => $this->name,
             'description' => $this->description,
@@ -24,7 +23,6 @@ class ProductResource extends JsonResource
             'image_url'   => $this->image_url,
             'created_at'  => $this->created_at ? $this->created_at->format('Y-m-d H:i:s') : null, // Formatage des dates
             'updated_at'  => $this->updated_at ? $this->updated_at->format('Y-m-d H:i:s') : null,
-
         ];
     }
 }
