@@ -28,6 +28,7 @@ class AuthController extends Controller
         // Vérifier le mot de passe
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json([
+                'status'=> 'error',
                 'message' => 'Invalid credentials.'
             ], 401);
         }
@@ -71,6 +72,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
+            'status' => 'succes',
             'message' => 'User registered successfully.',
             'access_token' => $token,
             'token_type' => 'Bearer',
