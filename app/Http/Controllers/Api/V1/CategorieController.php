@@ -16,7 +16,7 @@ class CategorieController extends Controller
     {
         $categories = Categorie::all();
 
-        // Vérifier si la collection est vide
+        // Vérifier si la collection est videsoutomstorea
         if ($categories->isEmpty()) {
             return response()->json([
                 'status'  => 'error',

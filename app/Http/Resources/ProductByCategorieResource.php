@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -21,18 +22,18 @@ class ProductByCategorieResource extends JsonResource
             ],
             'products' => $this->products->map(function ($product) {
                 return [
-                    'id'          => $this->id,
-                    'name'        => $this->name,
-                    'description' => $this->description,
-                    'price'       => $this->price,
-                    'stock'       => $this->stock,
-                    'category_id' => $this->category_id,
-                    'image_url'   => $this->image_url,
-                    'created_at'  => $this->created_at ? $this->created_at->format('Y-m-d H:i:s') : null, // Formatage des dates
-                    'updated_at'  => $this->updated_at ? $this->updated_at->format('Y-m-d H:i:s') : null,
+                    'id'          => $product->id,  // Utilisation correcte de $product
+                    'name'        => $product->name,
+                    'description' => $product->description,
+                    'price'       => $product->price,
+                    'stock'       => $product->stock,
+                    'category_id' => $product->category_id,
+                    'image_url'   => $product->image_url,
+                    'created_at'  => $product->created_at ? $product->created_at->format('Y-m-d H:i:s') : null,
+                    'updated_at'  => $product->updated_at ? $product->updated_at->format('Y-m-d H:i:s') : null,
                 ];
             }),
-        ];
 
+        ];
     }
 }
