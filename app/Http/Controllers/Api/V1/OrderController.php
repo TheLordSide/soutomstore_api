@@ -99,7 +99,7 @@ class OrderController extends Controller
         if(!$order){
 
             return response()->json([
-                'status'=>'echec',
+                'status'=>'error',
                 'message'=>'Commande non trouvée',
                 'data'=>[],
             ],404);

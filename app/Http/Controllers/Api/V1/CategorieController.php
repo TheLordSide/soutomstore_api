@@ -121,7 +121,7 @@ class CategorieController extends Controller
 
         // Retourne une réponse de succès après suppression
         return response()->json([
-            'status'  => 'success',
+            'status'  => 'succes',
             'message' => 'Catégorie supprimée avec succès.',
         ], 200);
     }
@@ -149,7 +149,7 @@ class CategorieController extends Controller
 
         // Retourne les produits liés à la catégorie
         return response()->json([
-            'status'  => 'success',
+            'status'  => 'succes',
             'message' => 'Produits trouvés pour la catégorie.',
             'data'    => new ProductByCategorieResource($categorie),
         ], 200);

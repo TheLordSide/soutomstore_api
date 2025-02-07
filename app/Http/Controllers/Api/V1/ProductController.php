@@ -26,7 +26,7 @@ class ProductController extends Controller
 
         // Si des produits existent, retourne la collection de produits
         return response()->json([
-            'status'  => 'success',
+            'status'  => 'succes',
             'message' => 'Données des produits récupérées avec succès.',
             'data'    => ProductResource::collection($product), // Utilisez collection ici pour transformer la collection
         ], 200);
@@ -55,7 +55,7 @@ class ProductController extends Controller
 
         if ($existingProduct) {
             return response()->json([
-                'status'  => 'echec',
+                'status'  => 'error',
                 'message' => 'Un produit avec ce nom ou cette description existe déjà.',
                 'data'    => $existingProduct,
             ], 409); // Code 409 pour indiquer un conflit
@@ -108,7 +108,7 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
         // Vérifier si le produit existe
         $product = Product::find($id);
@@ -125,7 +125,7 @@ class ProductController extends Controller
 
         // Retourne une réponse de succès après suppression
         return response()->json([
-            'status'  => 'success',
+            'status'  => 'succes',
             'message' => 'produit supprimé avec succès.',
         ], 200);
     }
