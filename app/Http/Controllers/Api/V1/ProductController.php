@@ -45,7 +45,7 @@ class ProductController extends Controller
             'price'       => 'required|numeric|min:0',
             'stock'       => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image_url'   => 'nullable|url',
+            'image_url'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Vérification personnalisée pour éviter les doublons
